@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Report a Pothole | FixMyRoad</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #0f0f0f;
+      --surface: #1a1a1a;
+      --card: #222222;
+      --accent: #f5a623;
+      --accent2: #e63946;
+      --text: #f0ece4;
+      --muted: #888;
+      --border: #333;
+      --success: #2ecc71;
+      --radius: 12px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+    }
+
+    /* Header */
+    header {
+      background: var(--surface);
+      border-bottom: 2px solid var(--accent);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem;
+      letter-spacing: 2px;
+      color: var(--accent);
+    }
+
+    .logo span { color: var(--accent2); }
+
+    header nav a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-left: 1.5rem;
+      transition: color 0.2s;
+    }
+    header nav a:hover { color: var(--accent); }
+
+    /* Hero */
+    .hero {
+      background: linear-gradient(135deg, #1a1a1a 0%, #111 60%, #1c0f00 100%);
+      padding: 4rem 2rem 3rem;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: var(--accent2);
+      color: white;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 1rem;
+    }
+
+    .hero h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      line-height: 1;
+      letter-spacing: 3px;
+      color: var(--text);
+    }
+
+    .hero h1 span { color: var(--accent); }
+
+    .hero p {
+      color: var(--muted);
+      margin-top: 1rem;
+      font-size: 1rem;
+      max-width: 480px;
+      margin-inline: auto;
+    }
+
+    /* Form Container */
+    .container {
+      max-width: 720px;
+      margin: 3rem auto;
+      padding: 0 1.5rem 4rem;
+    }
+
+    .form-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2.5rem;
+    }
+
+    .section-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.1rem;
+      letter-spacing: 2px;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2rem;
+    }
+
+    .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+    .form-group.full { grid-column: 1 / -1; }
+
+    label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    input, textarea, select {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      padding: 0.75rem 1rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+      width: 100%;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(245, 166, 35, 0.15);
+    }
+
+    textarea { resize: vertical; min-height: 100px; }
+
+    select option { background: var(--surface); }
+
+    /* Severity pills */
+    .severity-group {
+      display: flex;
+      gap: 0.7rem;
+      flex-wrap: wrap;
+    }
+
+    .severity-pill {
+      padding: 0.4rem 1.2rem;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .severity-pill:hover { border-color: var(--accent); color: var(--accent); }
+
+    .severity-pill.active[data-val="low"] { background: #1a3320; border-color: var(--success); color: var(--success); }
+    .severity-pill.active[data-val="medium"] { background: #332200; border-color: var(--accent); color: var(--accent); }
+    .severity-pill.active[data-val="high"] { background: #2d0f0f; border-color: var(--accent2); color: var(--accent2); }
+
+    /* Photo upload */
+    .upload-area {
+      border: 2px dashed var(--border);
+      border-radius: 10px;
+      padding: 2rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+    }
+
+    .upload-area:hover { border-color: var(--accent); background: rgba(245,166,35,0.03); }
+    .upload-area.dragover { border-color: var(--accent); background: rgba(245,166,35,0.08); }
+
+    .upload-area input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+      border: none;
+      padding: 0;
+    }
+
+    .upload-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+
+    .upload-area p { color: var(--muted); font-size: 0.9rem; }
+    .upload-area p strong { color: var(--accent); }
+
+    #photo-preview {
+      margin-top: 1rem;
+      display: none;
+    }
+
+    #photo-preview img {
+      width: 100%;
+      max-height: 200px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+
+    /* Location */
+    .location-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--muted);
+      padding: 0.6rem 1rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'DM Sans', sans-serif;
+      margin-top: 0.5rem;
+    }
+
+    .location-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* Divider */
+    .divider { margin: 2rem 0; border: none; border-top: 1px solid var(--border); }
+
+    /* Submit */
+    .submit-btn {
+      width: 100%;
+      padding: 1rem;
+      background: var(--accent);
+      color: #0f0f0f;
+      border: none;
+      border-radius: 10px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.2rem;
+      letter-spacing: 2px;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 2rem;
+    }
+
+    .submit-btn:hover { background: #e0951f; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(245,166,35,0.3); }
+    .submit-btn:active { transform: translateY(0); }
+    .submit-btn:disabled { background: var(--border); color: var(--muted); cursor: not-allowed; transform: none; box-shadow: none; }
+
+    /* Success message */
+    #success-msg {
+      display: none;
+      background: #0d2e18;
+      border: 1px solid var(--success);
+      border-radius: 10px;
+      padding: 1.5rem;
+      text-align: center;
+      margin-top: 1.5rem;
+    }
+
+    #success-msg .check { font-size: 2rem; }
+    #success-msg h3 { color: var(--success); margin: 0.5rem 0 0.3rem; font-size: 1.1rem; }
+    #success-msg p { color: var(--muted); font-size: 0.9rem; }
+    #success-msg a { color: var(--accent); text-decoration: none; }
+
+    /* Track link */
+    .track-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 2rem;
+      padding: 1rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+
+    .track-link:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* Error */
+    .error-msg {
+      color: var(--accent2);
+      font-size: 0.8rem;
+      margin-top: 0.3rem;
+      display: none;
+    }
+
+    @media (max-width: 600px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .form-card { padding: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Fix<span>My</span>Road</div>
+  <nav>
+    <a href="index.html">Report</a>
+    <a href="admin.html">Admin</a>
+  </nav>
+</header>
+
+<div class="hero">
+  <div class="hero-badge">🚧 Citizen Portal</div>
+  <h1>REPORT A <span>POTHOLE</span></h1>
+  <p>Help us fix your roads faster. Submit a report and track the repair progress.</p>
+</div>
+
+<div class="container">
+  <div class="form-card">
+
+    <div class="section-title">📋 Your Details</div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Your Name (optional)</label>
+        <input type="text" id="name" placeholder="e.g. Rahul Sharma" />
+      </div>
+      <div class="form-group">
+        <label>Phone Number (optional)</label>
+        <input type="tel" id="phone" placeholder="e.g. 9876543210" />
+      </div>
+    </div>
+
+    <hr class="divider"/>
+
+    <div class="section-title">📍 Pothole Location</div>
+    <div class="form-grid">
+      <div class="form-group full">
+        <label>Address / Landmark <span style="color:var(--accent2)">*</span></label>
+        <input type="text" id="address" placeholder="e.g. Near City Mall, MG Road, Sector 14" />
+        <span class="error-msg" id="address-err">Address is required.</span>
+      </div>
+    </div>
+    <button class="location-btn" onclick="getLocation()">📡 Use My Current Location</button>
+    <input type="hidden" id="latitude"/>
+    <input type="hidden" id="longitude"/>
+    <div id="location-status" style="font-size:0.8rem;color:var(--muted);margin-top:0.5rem;"></div>
+
+    <hr class="divider"/>
+
+    <div class="section-title">🕳️ Pothole Details</div>
+    <div class="form-grid">
+      <div class="form-group full">
+        <label>Description <span style="color:var(--accent2)">*</span></label>
+        <textarea id="description" placeholder="Describe the pothole — size, depth, how long it's been there, any accidents caused..."></textarea>
+        <span class="error-msg" id="desc-err">Description is required.</span>
+      </div>
+      <div class="form-group full">
+        <label>Severity Level</label>
+        <div class="severity-group">
+          <button class="severity-pill" data-val="low" onclick="setSeverity(this)">🟢 Low</button>
+          <button class="severity-pill active" data-val="medium" onclick="setSeverity(this)">🟡 Medium</button>
+          <button class="severity-pill" data-val="high" onclick="setSeverity(this)">🔴 High</button>
+        </div>
+        <input type="hidden" id="severity" value="medium"/>
+      </div>
+      <div class="form-group full">
+        <label>Upload Photo (optional)</label>
+        <div class="upload-area" id="upload-area">
+          <input type="file" id="photo" accept="image/*" onchange="previewPhoto(event)" />
+          <div class="upload-icon">📷</div>
+          <p><strong>Click to upload</strong> or drag & drop</p>
+          <p style="font-size:0.75rem;margin-top:0.3rem;">JPG, PNG up to 5MB</p>
+        </div>
+        <div id="photo-preview">
+          <img id="preview-img" src="" alt="Preview" />
+        </div>
+      </div>
+    </div>
+
+    <button class="submit-btn" id="submit-btn" onclick="submitReport()">
+      SUBMIT REPORT
+    </button>
+
+    <div id="success-msg">
+      <div class="check">✅</div>
+      <h3>Report Submitted Successfully!</h3>
+      <p>Your Report ID: <strong id="report-id-display" style="color:var(--accent)"></strong></p>
+      <p style="margin-top:0.5rem;">We'll track and update the status. <a href="admin.html">View all reports →</a></p>
+    </div>
+  </div>
+
+  <a href="admin.html" class="track-link">
+    🔍 View Admin Dashboard & Track Reports →
+  </a>
+</div>
+
+<script>
+  let selectedSeverity = 'medium';
+
+  function setSeverity(btn) {
+    document.querySelectorAll('.severity-pill').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    selectedSeverity = btn.dataset.val;
+    document.getElementById('severity').value = selectedSeverity;
+  }
+
+  function previewPhoto(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      document.getElementById('preview-img').src = e.target.result;
+      document.getElementById('photo-preview').style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function getLocation() {
+    const statusEl = document.getElementById('location-status');
+    if (!navigator.geolocation) {
+      statusEl.textContent = '❌ Geolocation not supported by your browser.';
+      return;
+    }
+    statusEl.textContent = '📡 Detecting location...';
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        document.getElementById('latitude').value = pos.coords.latitude;
+        document.getElementById('longitude').value = pos.coords.longitude;
+        statusEl.style.color = '#2ecc71';
+        statusEl.textContent = `✅ Location captured: ${pos.coords.latitude.toFixed(5)}, ${pos.coords.longitude.toFixed(5)}`;
+      },
+      () => {
+        statusEl.style.color = 'var(--accent2)';
+        statusEl.textContent = '❌ Could not get location. Please enter address manually.';
+      }
+    );
+  }
+
+  async function submitReport() {
+    const address = document.getElementById('address').value.trim();
+    const description = document.getElementById('description').value.trim();
+    let valid = true;
+
+    document.getElementById('address-err').style.display = 'none';
+    document.getElementById('desc-err').style.display = 'none';
+
+    if (!address) { document.getElementById('address-err').style.display = 'block'; valid = false; }
+    if (!description) { document.getElementById('desc-err').style.display = 'block'; valid = false; }
+    if (!valid) return;
+
+    const btn = document.getElementById('submit-btn');
+    btn.disabled = true;
+    btn.textContent = 'SUBMITTING...';
+
+    const formData = new FormData();
+    formData.append('name', document.getElementById('name').value);
+    formData.append('phone', document.getElementById('phone').value);
+    formData.append('address', address);
+    formData.append('description', description);
+    formData.append('severity', selectedSeverity);
+    formData.append('latitude', document.getElementById('latitude').value);
+    formData.append('longitude', document.getElementById('longitude').value);
+
+    const photoInput = document.getElementById('photo');
+    if (photoInput.files[0]) formData.append('photo', photoInput.files[0]);
+
+    try {
+      const res = await fetch('/api/reports', { method: 'POST', body: formData });
+      const data = await res.json();
+      if (res.ok) {
+        document.getElementById('report-id-display').textContent = data.report.id;
+        document.getElementById('success-msg').style.display = 'block';
+        btn.style.display = 'none';
+        document.getElementById('success-msg').scrollIntoView({ behavior: 'smooth' });
+      } else {
+        alert('Error: ' + data.error);
+        btn.disabled = false;
+        btn.textContent = 'SUBMIT REPORT';
+      }
+    } catch (e) {
+      alert('Network error. Make sure the server is running.');
+      btn.disabled = false;
+      btn.textContent = 'SUBMIT REPORT';
+    }
+  }
+</script>
+</body>
+</html>
