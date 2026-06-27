@@ -1,5 +1,8 @@
 # 🕳️ FixMyRoad — Pothole Reporting System
+
 A full-stack pothole reporting and tracking web application.
+
+🔗 **Live Demo:** https://pothole-reporting-system-production.up.railway.app
 
 ## Tech Stack
 - **Frontend:** HTML, CSS, JavaScript (Vanilla)
@@ -8,18 +11,23 @@ A full-stack pothole reporting and tracking web application.
 - **File Uploads:** Multer (photo uploads)
 
 ## Project Structure
-```
 pothole-app/
-├── server.js          # Express backend
-├── package.json
-├── data/
-│   └── reports.json   # Auto-created on first run
-├── uploads/           # Auto-created for photo uploads
-└── public/
-    ├── index.html     # Citizen report form
-    └── admin.html     # Admin dashboard
-```
 
+├── server.js          # Express backend
+
+├── package.json
+
+├── data/
+
+│   └── reports.json   # Auto-created on first run
+
+├── uploads/           # Auto-created for photo uploads
+
+└── public/
+
+├── index.html     # Citizen report form
+
+└── admin.html     # Admin dashboard
 ## Setup & Run
 
 ### 1. Install dependencies
@@ -31,6 +39,7 @@ npm install
 ```bash
 node server.js
 ```
+
 Or for auto-restart during development:
 ```bash
 npm run dev
@@ -41,7 +50,6 @@ npm run dev
 - Admin dashboard: http://localhost:3000/admin.html
 
 ## API Endpoints
-
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | POST | /api/reports | Submit a new report |
